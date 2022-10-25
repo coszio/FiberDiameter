@@ -11,6 +11,7 @@ import SidePanel from "./SidePanel";
 import SystemMenu from "./SystemMenu";
 import { Props as PendingInferenceProps } from "./InferencePointer";
 import { toast } from "react-toastify";
+import Preferences from "./Preferences";
 
 interface State {
   isValidScale: boolean;
@@ -26,6 +27,12 @@ interface State {
   isChoosingTarget: boolean;
   imagePath: string;
   pendingInferences: PendingInferenceProps[];
+  showPreferences: boolean;
+}
+interface Preferences {
+  measurementDecimals: number;
+  fiberAverageDecimals: number;
+  globalAverageDecimals: number;
 }
 
 interface AppContextType {
@@ -35,6 +42,8 @@ interface AppContextType {
   swapImage: (event: ChangeEvent<HTMLInputElement>) => void;
   appState: State;
   setAppState: Dispatch<SetStateAction<State>>;
+  preferences: Preferences;
+  setPreferences: Dispatch<SetStateAction<Preferences>>;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -51,8 +60,15 @@ const App = () => {
     realDims: { width: 0, height: 0 },
     htmlImageDims: { width: 0, height: 0, x: 0, y: 0 },
     isChoosingTarget: false,
-    imagePath: '',
+    imagePath: "",
     pendingInferences: [] as PendingInferenceProps[],
+    showPreferences: false,
+  });
+
+  const [preferences, setPreferences] = useState<Preferences>({
+    measurementDecimals: 2,
+    fiberAverageDecimals: 3,
+    globalAverageDecimals: 3,
   });
 
   const onScaleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -66,10 +82,10 @@ const App = () => {
   };
 
   const addFiber = (measurements: Line[], color: string) => {
-    console.log("add fiber")
+    console.log("add fiber");
     setFibers((prevFibers) => {
       const id = Math.max(0, ...prevFibers.map((fiber) => fiber.id)) + 1;
-      console.log("push fiber")
+      console.log("push fiber");
       prevFibers.push({
         id,
         color,
@@ -92,14 +108,14 @@ const App = () => {
     }
 
     const imagePath = URL.createObjectURL(file);
-    
+
     setFibers([]);
     setState((prevState) => ({
       ...prevState,
       imagePath,
     }));
   };
-  
+
   return (
     <div className='h-screen py-6 bg-black'>
       <AppContext.Provider
@@ -110,10 +126,12 @@ const App = () => {
           swapImage,
           appState: state,
           setAppState: setState,
+          preferences,
+          setPreferences,
         }}
       >
         <SystemMenu className='w-full' />
-        <div className='flex h-[90vh]'>
+        <div className='relative flex h-[90vh]'>
           <SidePanel
             onScaleChange={onScaleChange}
             isValidScale={state.isValidScale}
@@ -121,6 +139,7 @@ const App = () => {
           <div id='editor' className='w-full bg-slate-200'>
             <Editor />
           </div>
+          <Preferences/>
         </div>
       </AppContext.Provider>
     </div>

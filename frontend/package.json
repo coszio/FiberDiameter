@@ -12,6 +12,7 @@
     "@babel/core": "^7.19.3",
     "@coszio/react-measurements": "^0.6.11",
     "@mantine/hooks": "^5.5.4",
+    "@tailwindcss/typography": "^0.5.7",
     "daisyui": "^2.31.0",
     "draft-js": "^0.11.7",
     "next": "^12.3.1",

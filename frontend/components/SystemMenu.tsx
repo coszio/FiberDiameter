@@ -2,7 +2,11 @@ import React, { useContext } from "react";
 import { AppContext } from "./App";
 
 const SystemMenu = (props: React.ComponentPropsWithoutRef<"div">) => {
-  const { swapImage } = useContext(AppContext)!;
+  const { swapImage, setAppState } = useContext(AppContext)!;
+
+  const openPreferences = () => {
+    setAppState((prevState) => ({ ...prevState, showPreferences: true }));
+  };
 
   return (
     <div className='flex p-1 text-sm select-none group bg-slate-700'>
@@ -14,6 +18,11 @@ const SystemMenu = (props: React.ComponentPropsWithoutRef<"div">) => {
           className='hidden'
           onChange={swapImage}
         />
+        <Item htmlFor='preferences'>
+          <button id='preferences' onClick={openPreferences}>
+            Preferences
+          </button>
+        </Item>
         {/* <Item>Open</Item> */}
       </Tab>
       <Tab title='Download'>
